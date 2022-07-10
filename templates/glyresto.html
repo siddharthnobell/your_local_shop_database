@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<title>Gully Restro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+     integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+     crossorigin="">
+
+	<style>
+		table {
+		  border-collapse: collapse;
+		  width: 100%;
+		}
+
+		th, td {
+		  text-align: left;
+		  padding: 8px;
+		}
+
+		tr:nth-child(even){background-color: #f2f2f2}
+		tr:nth-child(odd){background-color: #ffffff}
+		th {
+		  color: black;
+		}
+		
+		#map {
+        height: 200px;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+	   
+	   
+	   
+		body {
+		  margin: 0;
+		  font-family: Arial, Helvetica, sans-serif;
+		}
+
+		.topnav {
+		  overflow: hidden;
+		  background-color: #333;
+		}
+
+		.topnav a {
+		  float: left;
+		  color: #f2f2f2;
+		  text-align: center;
+		  padding: 14px 16px;
+		  text-decoration: none;
+		  font-size: 17px;
+		}
+
+		.topnav a:hover {
+		  background-color: #ddd;
+		  color: black;
+		}
+
+		.topnav a.active {
+		  background-color: #4CAF50;
+		  color: white;
+		}
+		
+		/* Full-width input fields */
+		input[type=text], input[type=tel], input[type=email],input[type=time],select{
+		  width: 100%;
+		  padding: 15px;
+		  margin: 5px 0 22px 0;
+		  display: inline-block;
+		  border: none;
+		  background: #f1f1f1;
+		  height: 50px;
+		}
+
+		input[type=text]:focus, input[type=tel]:focus, input[type=email]:focus,input[type=time]:focus,select  {
+		  background-color: #ddd;
+		  outline: none;
+		  height: 50px;
+		}
+		
+		
+	</style>
+	
+
+
+</head>
+<body >
+
+<div class="w3-container w3-green">
+  <h1>Hello {{user}}, Welcome to Gully Restaurants</h1>
+</div>
+
+
+
+<div class="topnav">
+  <a href="{{ url_for('resto_profille') }}">My Restaurants</a>
+  <a href="{{ url_for('resto_menu',i_id=0) }}">Restaurants Menu</a>
+  <a href="{{ url_for('my_form',r_id=0) }}">Restaurants Orders</a>
+  <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+<div class="w3-row-padding">
+ <form method="POST">
+  <div class="w3-third" style="background-color:white;border-style: solid; border-color: transparent">
+    <p><b>Identifies the shop and Can be</b> Owner Name Or Shop Name Or Shop's Pet Name</p>
+	<p><input type="text" name="shop_name" placeholder="Restaurant Name" 
+	{% if data is not none %}
+		value="{{data[0][1]}}"
+	{%endif %}
+	required></p>
+  </div> 
+  <div class="w3-third" style="background-color:white;border-style: solid;border-color: transparent">
+    <p><b>Mobile number Or Telephone number</b> of the Shop or the Shop owner</p>
+    <p><input type="tel" type="text" name="contact" placeholder="Mobile / Contact Number" 
+	{% if data is not none %}
+		value="{{data[0][2]}}"
+	{%endif %}
+	required></p> 
+  </div>
+   <div class="w3-third" style="background-color:white;border-style: solid;border-color: transparent">
+    <p><b>Email of the shop owner</b> can be business email or the shop owner personal email</p>
+    <p><input name="email" type="text" placeholder="Email" required
+	{% if data is not none %}
+		value="{{data[0][3]}}"
+	{%endif %}
+	></p> 
+  </div>
+   <div class="w3-third" style="background-color:white;border-style: solid;border-color: transparent">
+    <p>	
+	    <p><b>Select Slot?,</b> make two entries if the resturant closes in afternoon i.e. one for morning and evening</p>
+		<select name="slot">
+			<option value="F" 	
+			{% if data is not none %}
+				{% if data[0][4] == 'F' %}
+					selected
+				{%endif %}
+			{%endif %}>Full Day</option>
+		    <option value="M"
+			{% if data is not none %}
+				{% if data[0][4] == 'M' %}
+					selected
+				{%endif %}
+			{%endif %}>Morning</option>
+			<option value="E"
+			{% if data is not none %}
+				{% if data[0][4] == 'E' %}
+					selected
+				{%endif %}
+			{%endif %}>Evening</option>
+		</select>
+		 </p>
+    
+  </div>
+  <div class="w3-third" style="background-color:white;border-style: solid;border-color: transparent">
+	<p><b>When the resturant opens?,</b> this is the time from when the resturant can take orders or can be visited</p>
+    <p><input type="time" name="opens" 
+	{% if data is not none %}
+		{% if data[0][5]|string|length == 7 %}
+			value="0{{data[0][5]}}"
+		{% else %}
+			value="{{data[0][5]}}"
+		{%endif %}
+	{% else %}
+		value="08:00:00"
+	{%endif %}
+	></p> 
+  </div>
+  <div class="w3-third" style="background-color:white;border-style: solid;border-color: transparent">
+    <p><b>When the resturant closes?,</b> This is the time when the resturant can take last orders or can be visited upto</p>
+    <p><input type="time" placeholder="hrs:mins" name="closes" 
+	{% if data is not none %}
+		{% if data[0][6]|string|length == 7 %}
+			value="0{{data[0][6]}}"
+		{% else %}
+			value="{{data[0][6]}}"
+		{%endif %}
+	{% else %}
+		value="22:00:00"
+	{%endif %}
+	></p> 
+  </div>
+   <div class="w3-third" style="background-color:white;border-style: solid;border-color: transparent">
+	    <p><b>Select veg / non-veg also / non-veg only?,</b> select non-veg also for resturants that server both veg and non-veg</p>
+		<select name="type">
+		    <option value="NVA"
+			{% if data is not none %}
+				{% if data[0][7] == 'NVA' %}
+					selected
+				{%endif %}
+			{%endif %}
+			>non-veg also</option>
+			<option value="NVO"
+			{% if data is not none %}
+				{% if data[0][7] == 'NVO' %}
+					selected
+				{%endif %}
+			{%endif %}
+			>non-veg only</option>
+			<option value="V"
+			{% if data is not none %}
+				{% if data[0][7] == 'V' %}
+					selected
+				{%endif %}
+			{%endif %}
+			>veg only</option>
+		</select>
+  </div>
+  <div class="w3-third" style="background-color:white;border-style: solid;border-color: transparent">
+    <p><b>Address of Resturant</b> add a landmark using / after address for easy location</p>
+    <p><input name="address" type="text" placeholder="Address / Landmark" 
+	{% if data is not none %}
+		value="{{data[0][8]}}"
+	{%endif %}
+	required></p>
+  </div>
+  <div class="w3-third" style="background-color:white;border-style: solid;border-color: transparent">
+    <p><b>All ready</b><br> click the below submit button</p>
+	<p><input style="background-color: #4CAF50;border: none; color: white;text-align: center;text-decoration: none;
+	display: inline-block;margin: 5px 0 22px 0;height: 50px" type="submit" value="Add / Update"></p> 
+  </div>
+ </form>
+ 
+</div>
+
+
+
+</body>
+</html>
+

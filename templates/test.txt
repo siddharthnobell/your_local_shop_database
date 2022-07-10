@@ -1,0 +1,28 @@
+
+<div class="w3-container w3-green">
+  <h2>Resturant's Menu</h2>
+</div>
+<div style="overflow-x:auto;">
+  <table>
+	<tr>
+		<b>
+		<th>Food Item</th>
+		<th>Cost Price</th>
+		<th>SGST</th>
+		<th>CGST</th>
+		<th>Item Description</th>
+		<th>Item Image</th></b>
+	</tr>
+	{% for item in data %}
+	<tr>
+		<td>{{item[0]}}</td>
+		<td>{{item[1]}}</td>
+		<td>{{item[2]}}</td>
+		<td>{{item[3]}}</td>
+		<td>{{item[4]}}</td>
+		<td>{{item[5]}}</td>
+		<td>{{item[6]}}</td>
+	</tr>
+	{% endfor %}
+  </table>
+<div>

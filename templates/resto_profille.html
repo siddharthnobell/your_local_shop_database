@@ -1,0 +1,177 @@
+<html>
+<title>Gully Restro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+table {
+		  border-collapse: collapse;
+		  width: 100%;
+		}
+
+		th, td {
+		  text-align: left;
+		  padding: 8px;
+		}
+
+		tr:nth-child(even){background-color: #f2f2f2}
+		tr:nth-child(odd){background-color: #ffffff}
+		th {
+		  color: black;
+		}
+		
+		#map {
+        height: 200px;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       } 
+	   
+		body {
+		  margin: 0;
+		  font-family: Arial, Helvetica, sans-serif;
+		}
+
+		.topnav {
+		  overflow: hidden;
+		  background-color: #333;
+		}
+
+		.topnav a {
+		  float: left;
+		  color: #f2f2f2;
+		  text-align: center;
+		  padding: 14px 16px;
+		  text-decoration: none;
+		  font-size: 17px;
+		}
+
+		.topnav a:hover {
+		  background-color: #ddd;
+		  color: black;
+		}
+
+		.topnav a.active {
+		  background-color: #4CAF50;
+		  color: white;
+		}
+		
+		/* Full-width input fields */
+		input[type=text], input[type=tel], input[type=email],input[type=time],select{
+		  width: 100%;
+		  padding: 15px;
+		  margin: 5px 0 22px 0;
+		  display: inline-block;
+		  border: none;
+		  background: #f1f1f1;
+		  height: 50px;
+		}
+
+		input[type=text]:focus, input[type=tel]:focus, input[type=email]:focus,input[type=time]:focus,select  {
+		  background-color: #ddd;
+		  outline: none;
+		  height: 50px;
+		}
+  
+		.card {
+		  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+		  width: 99%;
+		  margin: 2%;
+		  text-align: center;
+		  font-family: arial;
+		}
+
+		.price {
+		  color: grey;
+		  font-size: 22px;
+		}
+
+		.card button {
+		  border: none;
+		  outline: 0;
+		  padding: 12px;
+		  color: white;
+		  background-color: #000;
+		  text-align: center;
+		  cursor: pointer;
+		  width: 100%;
+		  font-size: 18px;
+		}
+
+		.card button:hover {
+		  opacity: 0.5;
+		} 
+ 
+}
+</style>
+</head>
+<body>
+
+<div class="w3-container w3-green">
+  <h1>Hello {{user}}, Welcome to Gully Restaurants</h1>
+</div>
+
+
+
+<div class="topnav">
+  <a href="{{ url_for('resto_profille') }}">My Restaurants</a>
+  <a href="{{ url_for('resto_menu',i_id=0) }}">Restaurants Menu</a>
+  <a href="{{ url_for('my_form',r_id=0) }}">Restaurants Orders</a>
+  <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+<div class="w3-row-padding">
+	{% if data is not none %}
+	{% for item in data %}
+	<div class="w3-third" style="background-color:white;border-style: solid; border-color: transparent">
+	<div class="card" style="height:550px;position: relative;">
+	  <img src="static/no_name.png" alt="Denim Jeans" style="width:100%;height:60%">
+	  <h1>{{item[1]}}</h1>
+	  <b>Contact:</b> {{item[2]}} | 
+	  <b>Email:</b> {{item[3]}} | 
+	  <b>Opens for:</b> {% if item[4] == 'F'%}
+					Full Day
+				 {%endif %}
+				 {% if item[4] == 'M'%}
+					Morning Only
+				 {%endif %}
+				 {% if item[4] == 'E'%}
+					Evening Only
+				 {%endif %} | 
+	  <b>Opens at:</b> {{item[5]}} | 
+	  <b>Closes at:</b> {{item[6]}} | 
+	  <b>Type:</b> {% if item[7] == 'NVA'%}
+					Non Veg Also
+			{%endif %} 
+			{% if item[7] == 'NVO'%}
+					Non Veg Only
+			{%endif %} 
+			{% if item[7] == 'V'%}
+					Veg Only
+			{%endif %} | 
+	  
+	  <b>Address:</b> {{item[8]}}
+	  <p>
+	  <form action="{{url_for('my_form',r_id=item[0])}}">
+	  <button style="padding: 2%;width:98%;bottom: 0;position: absolute;left:1%;bottom:1%">Edit Restaurant</button>
+	  </form>
+	</div>
+	</div> 
+	{% endfor %}
+	{%endif %}
+	
+	<div class="w3-third" style="background-color:white;border-style: solid; border-color: transparent">
+	  <div class="card" style="height:550px;position: relative;">
+	  <img src="static/no_name.png" alt="Denim Jeans" style="width:100%;height:60%">
+	  <h1>Add New</h1>
+	  <p>Click on below button to add a new resturant</p>
+	  <form action="{{url_for('my_form',r_id=0)}}">
+	  <button style="padding: 2%;width:98%;bottom: 0;position: absolute;left:1%;bottom:1%">Add New Restaurant</button>
+	  </form>
+	</div>
+	</div>
+
+ 
+</div>
+
+
+</body>
+</html>

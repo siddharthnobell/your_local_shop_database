@@ -1,0 +1,254 @@
+<html>
+<title>Gully Restro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+table {
+		  border-collapse: collapse;
+		  width: 100%;
+		}
+
+		th, td {
+		  text-align: left;
+		  padding: 8px;
+		}
+
+		tr:nth-child(even){background-color: #f2f2f2}
+		tr:nth-child(odd){background-color: #ffffff}
+		th {
+		  color: black;
+		}
+		
+		#map {
+        height: 200px;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       } 
+	   
+		body {
+		  margin: 0;
+		  font-family: Arial, Helvetica, sans-serif;
+		}
+
+		.topnav {
+		  overflow: hidden;
+		  background-color: #333;
+		}
+
+		.topnav a {
+		  float: left;
+		  color: #f2f2f2;
+		  text-align: center;
+		  padding: 14px 16px;
+		  text-decoration: none;
+		  font-size: 17px;
+		}
+
+		.topnav a:hover {
+		  background-color: #ddd;
+		  color: black;
+		}
+
+		.topnav a.active {
+		  background-color: #4CAF50;
+		  color: white;
+		}
+		
+		/* Full-width input fields */
+		input[type=text], input[type=tel], input[type=email],input[type=time],input[type=number],select{
+		  width: 100%;
+		  padding: 15px;
+		  margin: 5px 0 22px 0;
+		  display: inline-block;
+		  border: none;
+		  background: #f1f1f1;
+		  height: 50px;
+		}
+
+		input[type=text]:focus, input[type=tel]:focus, input[type=email]:focus,input[type=time]:focus,input[type=number]:focus,select  {
+		  background-color: #ddd;
+		  outline: none;
+		  height: 50px;
+		}
+  
+		.card {
+		  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+		  width: 96%;
+		  margin: 2%;
+		  text-align: center;
+		  font-family: arial;
+		}
+		.card button {
+		  border: none;
+		  outline: 0;
+		  padding: 8px;
+		  text-align: left;
+		  cursor: pointer;
+		  width: 100%;
+		  background-color: Transparent;
+		  background-repeat:no-repeat;
+		}
+
+		#overlay {
+		  position: absolute ;
+		  display: none;
+		  width: 94%;
+		  height: 60%;
+		  top: 25%;
+		  left: 3%;
+		  right: 3%;
+		  bottom: 25%;
+		  background-color:#fafafa;
+		  z-index: 2;
+		  opacity: 1;
+		  border-style: solid; 
+		  border-color: transparent
+		}
+		
+		#x {
+			position: absolute;
+			background-color: #fafafa;
+			top: 0px;
+			right: 0px;
+			border-radius: 25%;
+			border: none;
+			cursor: pointer;
+		}
+		
+		button:hover {
+		  opacity: 0.5;
+		}
+</style>
+</head>
+<body>
+
+<div class="w3-container w3-green">
+  <h1>Hello {{user}}, Welcome to Gully Restaurants</h1>
+</div>
+
+
+<div class="topnav">
+  <a href="{{ url_for('resto_profille') }}">My Restaurants</a>
+  <a href="{{ url_for('resto_menu',i_id=0) }}">Restaurants Menu</a>
+  <a href="{{ url_for('my_form',r_id=0) }}">Restaurants Orders</a>
+  <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+<div id="overlay">
+<button id = "x" onclick="off()">
+x
+</button>
+
+<div class="w3-row-padding">
+	<form id="edit_item" method="POST">
+		<input type="hidden" id="i_id" name="i_id">
+		<input type="hidden" id="v_id" name="v_id">
+		<input type="hidden" id="r_id" name="r_id">
+		<div class="w3-third" style="height:33%;background-color:white;border-style: solid; border-color: transparent;">
+			<p><b>Food item name</b></p>
+			<p><input type="text" name="food_item" placeholder="Food Item Name" required></p>
+		</div>
+		<div class="w3-third" style="height:33%;background-color:white;border-style: solid; border-color: transparent;">
+			<p><b>Item discription</b></p>
+			<p><input type="text" name="food_desc" placeholder="Food Item Discription" required></p>
+		</div>
+		<div class="w3-third" style="height:33%;background-color:white;border-style: solid;border-color: transparent;">
+	    <p><b>Select veg / non-veg</b></p>
+		<select id="food_type" name="food_type">
+		    <option value="non-veg" >non-veg </option>
+			<option value="veg">veg</option>
+		</select>
+		</div>
+		<div class="w3-third" style="height:33%;background-color:white;border-style: solid; border-color: transparent;">
+			<p><b>Item unit price</b></p>
+			<p><input type="number"  min="0" value="0" step=".00001" name="price" placeholder="0" required></p>
+		</div>
+		<div class="w3-third" style="height:33%;background-color:white;border-style: solid; border-color: transparent;">
+			<p><b>Item unit SGST</b></p>
+			<p><input type="number"  min="0" value="0" step=".00001" name="sgst" placeholder="0" required></p>
+		</div>
+		<div class="w3-third" style="height:33%;background-color:white;border-style: solid; border-color: transparent;">
+			<p><b>Item unit CGST</b></p>
+			<p><input type="number"  min="0" value="0" step=".00001" name="cgst" placeholder="0" required></p>
+		</div>
+		<div class="w3-third" style="height:33%;width:100%;background-color:white;border-style: solid; border-color: transparent;">
+		<p><b>Submit to update item</b></p>
+		<input type="submit" style="background-color: #4CAF50;border: none; color: white;text-align: center;text-decoration: none;
+	display: inline-block;margin: 5px 0 22px 0;height: 50px;width:98%;" value="Submit">
+		</div>
+	</form>
+</div>
+</div>
+
+{% if data is not none %}
+	{% for toup in data %}
+	<div class="card" >
+	<div class="w3-container w3-green"><h1>Menu: {{toup[0]}}</h1><hr></div>
+	<div style="overflow-x:auto;">
+	  <table>
+		<tr>
+			<b>
+			<th>Image</th>
+			<th>Item</th>
+			<th>Discription</th>
+			<th>Price</th>
+			<th>SGST</th>
+			<th>CGST</th>
+			<th>Type</th>
+			<th>Edit</th></b>
+		</tr>
+		{% if toup|length != 4 %}
+		{% for item in toup[1] %}
+		<tr>
+			<td><img src="/static/9_images.jpg" style="width:75px;height:75px"></td>
+			<td>{{item[3]}}</td>
+			<td>{{item[4]}}</td>
+			<td>{{item[5]}}</td>
+			<td>{{item[6]}}</td>
+			<td>{{item[7]}}</td>
+			<td>{{item[8]}}</td>
+			<td>
+				<button onclick="on({{item[0]}},{{item[1]}},{{item[2]}},'{{item[3]}}','{{item[4]}}',{{item[5]}},{{item[6]}},{{item[7]}},'{{item[8]}}')">Edit Item</button>
+			</td>
+		</tr>
+		{% endfor %}
+		{%endif %}
+	  </table>
+	</div>
+	{% if toup|length != 4 %}
+	<button onclick="on(0,{{toup[1][0][1]}},{{toup[1][0][2]}},'','',0,0,0,0)" style="border: none;outline: 0;padding: 12px;color: white;background-color: #000;text-align: center;cursor: pointer;width: 100%;font-size: 18px;">Add New Item to Menu</button>
+	{% else %}
+	<button onclick="on(0,{{toup[2]}},{{toup[3]}},'','',0,0,0,0)" style="border: none;outline: 0;padding: 12px;color: white;background-color: #000;text-align: center;cursor: pointer;width: 100%;font-size: 18px;">Add New Item to Menu</button>
+	{%endif %}
+	</div>
+	
+{% endfor %}
+{%endif %}
+
+<script>
+
+function on(i_id,v_id,r_id,i_name,i_desc,i_price,sgst,cgst,type) {
+  oFormObject = document.forms['edit_item'];
+  document.getElementById("overlay").style.display = "block";
+  oFormObject.elements["food_item"].value = i_name;
+  oFormObject.elements["food_desc"].value = i_desc;
+  let sel = document.getElementById('food_type')
+  sel.value = type;
+  oFormObject.elements["price"].value = i_price;
+  oFormObject.elements["sgst"].value = sgst;
+  oFormObject.elements["cgst"].value = cgst;
+  oFormObject.elements["i_id"].value = i_id;
+  oFormObject.elements["v_id"].value = v_id;
+  oFormObject.elements["r_id"].value = r_id;
+	
+
+  
+}
+
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
+</script>
+
+</body>
+</html>

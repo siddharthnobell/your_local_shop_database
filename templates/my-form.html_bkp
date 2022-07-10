@@ -1,0 +1,7 @@
+<form method="POST">
+    Vendor Name <input name="text1">
+	Vendor Mobile <input name="text2">
+	Open Time <input name="text3">
+	Close Time<input name="text4">
+	Products Offered<input name="text5">
+</form>
