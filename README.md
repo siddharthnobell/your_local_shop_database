@@ -2,7 +2,7 @@
 A simple web application to setup shops database 
 * You login to portal where you can create your shops / resturants online and then add inventory to those
 * You can also add in where the shops are located and their operations timings 
-* This is a simple POC which can be extrended and is built using python, flask and jinja2 
+* This is a simple POC which can be extended and is built using python, flask and jinja2 
 * And is one of the frist apps I had build while I was leaning flask in aound 2017-18
 
 The screenflow is as below 
